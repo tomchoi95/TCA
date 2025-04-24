@@ -2,6 +2,9 @@ import ProjectDescription
 
 let project = Project(
     name: "TCADemo",
+    packages: [
+        .remote(url: "https://github.com/pointfreeco/swift-composable-architecture", requirement: .upToNextMajor(from: "1.0.0"))
+    ],
     targets: [
         .target(
             name: "TCADemo",
@@ -18,7 +21,9 @@ let project = Project(
             ),
             sources: ["TCADemo/Sources/**"],
             resources: ["TCADemo/Resources/**"],
-            dependencies: []
+            dependencies: [
+                .package(product: "ComposableArchitecture")
+            ]
         ),
         .target(
             name: "TCADemoTests",
