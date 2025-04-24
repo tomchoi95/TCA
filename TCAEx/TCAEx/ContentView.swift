@@ -1,0 +1,57 @@
+//
+//  ContentView.swift
+//  TCAEx
+//
+//  Created by 최범수 on 2025-04-09.
+//
+
+import SwiftUI
+import ComposableArchitecture
+
+struct ContentView: View {
+    
+    let store: StoreOf<CounterFeature>
+    
+    var body: some View {
+        VStack {
+            Text("\(store.count)")
+                .font(.largeTitle)
+                .padding()
+                .background(Color.black.opacity(0.1))
+                
+            HStack {
+                Button("-") {
+                    store.send(.decrementButtonTapped)
+                }
+                .font(.largeTitle)
+                .padding()
+                .background(Color.black.opacity(0.1))
+                .cornerRadius(10)
+                
+                Button("+") {
+                    store.send(.incrementButtonTapped)
+                }
+                .font(.largeTitle)
+                .padding()
+                .background(Color.black.opacity(0.1))
+                .cornerRadius(10)
+            }
+            Button("Fact") {
+  
+                  }
+                  .font(.largeTitle)
+                  .padding()
+                  .background(Color.black.opacity(0.1))
+                  .cornerRadius(10)
+        }
+        .padding()
+    }
+}
+
+#Preview {
+    let store: Store = Store(initialState: CounterFeature.State()) {
+        CounterFeature()
+            ._printChanges()
+    }
+    ContentView(store: store)
+}
