@@ -10,7 +10,7 @@ import ComposableArchitecture
 
 struct ContentView: View {
     let store: StoreOf<CounterFeature>
-
+    
     var body: some View {
         VStack {
             Text(store.count.description)
@@ -29,6 +29,25 @@ struct ContentView: View {
                     .font(.largeTitle)
                     .background(Color.gray.secondary)
                     .clipShape(RoundedRectangle(cornerRadius: 8))
+            }
+            Button(store.isTimerRunning ? "Stop" : "Start") { store.send(.toggleTimerButtonTapped) }
+                  .font(.largeTitle)
+                  .padding()
+                  .background(Color.black.opacity(0.1))
+                  .cornerRadius(10)
+            Button("Fact") { store.send(.factButtonTapped) }
+                .font(.largeTitle)
+                .padding()
+                .background(Color.black.opacity(0.1))
+                .cornerRadius(10)
+            
+            if store.isLoading {
+                ProgressView()
+            } else if let fact = store.fact {
+                Text(fact)
+                    .font(.largeTitle)
+                    .multilineTextAlignment(.center)
+                    .padding()
             }
         }
         .padding()
