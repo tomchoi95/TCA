@@ -32,11 +32,21 @@ struct CounterView: View {
                 .background(Color.black.opacity(0.1))
                 .cornerRadius(10)
             }
+            
             Button("Fact") { store.send(.factButtonTapped) }
                   .font(.largeTitle)
                   .padding()
                   .background(Color.black.opacity(0.1))
                   .cornerRadius(10)
+            Group {
+                if store.isLoading {
+                    ProgressView()
+                } else {
+                    Text(store.fact ?? "")
+                }
+            }
+            .frame(height: 50)
+            .padding()
         }
         .padding()
     }
