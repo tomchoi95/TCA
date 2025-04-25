@@ -13,7 +13,7 @@ struct TCAExApp: App {
     
     static let store = Store(
         initialState: CounterFeature.State(),
-        reducer: { CounterFeature() }
+        reducer: { CounterFeature()._printChanges() },
     )
     
     var body: some Scene {

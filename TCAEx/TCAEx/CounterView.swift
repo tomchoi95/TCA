@@ -18,26 +18,33 @@ struct CounterView: View {
                 .font(.largeTitle)
                 .padding()
                 .background(Color.black.opacity(0.1))
-                
+            
             HStack {
                 Button("-") { store.send(.decrementButtonTapped) }
-                .font(.largeTitle)
-                .padding()
-                .background(Color.black.opacity(0.1))
-                .cornerRadius(10)
+                    .font(.largeTitle)
+                    .padding()
+                    .background(Color.black.opacity(0.1))
+                    .cornerRadius(10)
                 
                 Button("+") { store.send(.incrementButtonTapped) }
-                .font(.largeTitle)
-                .padding()
-                .background(Color.black.opacity(0.1))
-                .cornerRadius(10)
+                    .font(.largeTitle)
+                    .padding()
+                    .background(Color.black.opacity(0.1))
+                    .cornerRadius(10)
             }
             
             Button("Fact") { store.send(.factButtonTapped) }
-                  .font(.largeTitle)
-                  .padding()
-                  .background(Color.black.opacity(0.1))
-                  .cornerRadius(10)
+                .font(.largeTitle)
+                .padding()
+                .background(Color.black.opacity(0.1))
+                .cornerRadius(10)
+            
+            Button(store.isTimerRunning ? "Stop" : "Start") { store.send(.timerToggleButtonTapped) }
+                .font(.largeTitle)
+                .padding()
+                .background(Color.black.opacity(0.1))
+                .cornerRadius(10)
+            
             Group {
                 if store.isLoading {
                     ProgressView()
@@ -53,9 +60,5 @@ struct CounterView: View {
 }
 
 #Preview {
-    let store: Store = Store(initialState: CounterFeature.State()) {
-        CounterFeature()
-            ._printChanges()
-    }
-    CounterView(store: store)
+    CounterView(store: TCAExApp.store)
 }

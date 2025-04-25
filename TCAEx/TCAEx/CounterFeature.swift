@@ -23,13 +23,14 @@ struct CounterFeature {
     // 위에서 말했듯. SwiftUI에서 @Observable매크로가 있듯이, TCA에서는 @ObservableState가 있다.
     // 이름에서부터 알 수 있듯이 상태에 매크로를 달아준다. 그런데,'tuned to value types'
     @ObservableState
-    struct State {
+    struct State: Equatable {
         /**
          For the purpose of a simple counter feature, the state consists of just a single integer, the current count, and the actions consist of tapping buttons to either increment or decrement the count.
          */
         var count: Int = 0
         var isLoading: Bool = false
         var fact: String?
+        var isTimerRunning: Bool = false
     }
     
     enum Action {
@@ -42,7 +43,13 @@ struct CounterFeature {
         case decrementButtonTapped
         case factButtonTapped
         case factResponse(String)
+        case timerToggleButtonTapped
+        case timerTick
     }
+    
+    enum CancelId { case timmer }
+    
+    @Dependency(\.continuousClock) var clock
     /**
      Step 5
      And finally, to finish conforming to Reducer, you must implement a body property with a Reduce reducer that evolves the state from its current value to the next value given a user action, and returns any effects that the feature wants to execute in the outside world. This almost always begins by switching on the incoming action to determine what logic you need to perform, and the state is provided as inout so you can perform mutations on it directly.
@@ -77,6 +84,27 @@ struct CounterFeature {
                 case .factResponse(let fact):
                     state.isLoading = false
                     state.fact = fact
+                    return .none
+                    
+                case .timerToggleButtonTapped:
+                    state.isTimerRunning.toggle()
+                    if state.isTimerRunning {
+                        return .run { send in
+                            for await _ in clock.timer(interval: .seconds(1)) {
+                                await send(.timerTick)
+                            }
+                        }
+                        .cancellable(id: CancelId.timmer)
+                        
+                    } else {
+                        return .cancel(id: CancelId.timmer)
+
+                    }
+                    
+                case .timerTick:
+                    state.count += 1
+                    state.isLoading = false
+                    state.fact = nil
                     return .none
             }
         }
