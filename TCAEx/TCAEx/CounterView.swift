@@ -8,7 +8,7 @@
 import SwiftUI
 import ComposableArchitecture
 
-struct ContentView: View {
+struct CounterView: View {
     
     let store: StoreOf<CounterFeature>
     
@@ -20,25 +20,19 @@ struct ContentView: View {
                 .background(Color.black.opacity(0.1))
                 
             HStack {
-                Button("-") {
-                    store.send(.decrementButtonTapped)
-                }
+                Button("-") { store.send(.decrementButtonTapped) }
                 .font(.largeTitle)
                 .padding()
                 .background(Color.black.opacity(0.1))
                 .cornerRadius(10)
                 
-                Button("+") {
-                    store.send(.incrementButtonTapped)
-                }
+                Button("+") { store.send(.incrementButtonTapped) }
                 .font(.largeTitle)
                 .padding()
                 .background(Color.black.opacity(0.1))
                 .cornerRadius(10)
             }
-            Button("Fact") {
-  
-                  }
+            Button("Fact") { store.send(.factButtonTapped) }
                   .font(.largeTitle)
                   .padding()
                   .background(Color.black.opacity(0.1))
@@ -53,5 +47,5 @@ struct ContentView: View {
         CounterFeature()
             ._printChanges()
     }
-    ContentView(store: store)
+    CounterView(store: store)
 }

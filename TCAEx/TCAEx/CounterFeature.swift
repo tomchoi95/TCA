@@ -6,6 +6,7 @@
 //
 
 import ComposableArchitecture
+import Foundation
 
 // 아래의 Reducer 매크로가 Reducer프로토콜을 채택 + etc의 역할
 // 매크로에() 를 하면 @Reducer(state: <#T##_SynthesizedConformance...##_SynthesizedConformance#>, action: <#T##_SynthesizedConformance...##_SynthesizedConformance#>) 이렇게 됨.
@@ -26,7 +27,9 @@ struct CounterFeature {
         /**
          For the purpose of a simple counter feature, the state consists of just a single integer, the current count, and the actions consist of tapping buttons to either increment or decrement the count.
          */
-        var count = 0
+        var count: Int = 0
+        var isLoading: Bool = false
+        var fact: String?
     }
     
     enum Action {
@@ -37,6 +40,8 @@ struct CounterFeature {
         // 변수의 이름을 지어줄 때, UI 이벤트 위주로, 수동적인 느낌알쥬?
         case incrementButtonTapped
         case decrementButtonTapped
+        case factButtonTapped
+        case factResponse(String)
     }
     /**
      Step 5
@@ -48,10 +53,30 @@ struct CounterFeature {
         Reduce { state, action in
             switch action {
                 case .decrementButtonTapped:
+                    state.isLoading = false
+                    state.fact = nil
                     state.count -= 1
                     return .none
+                    
                 case .incrementButtonTapped:
+                    state.isLoading = false
+                    state.fact = nil
                     state.count += 1
+                    return .none
+                    
+                case .factButtonTapped:
+                    state.isLoading = true
+                    state.fact = nil
+                    return .run { [count = state.count] send in
+                        let url = URL(string: "http://numbersapi.com/\(count)")!
+                        let (data, _) = try await URLSession.shared.data(from: url)
+                        let fact = String(decoding: data, as: UTF8.self)
+                        await send(.factResponse(fact))
+                    }
+                    
+                case .factResponse(let fact):
+                    state.isLoading = false
+                    state.fact = fact
                     return .none
             }
         }
