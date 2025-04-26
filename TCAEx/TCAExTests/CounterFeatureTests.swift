@@ -31,28 +31,23 @@ struct CounterFeatureTests {
             withDependencies: { $0.continuousClock = clock }
         )
         
-        await store.send(.timerToggleButtonTapped) {
-            $0.isTimerRunning = true
-        }
+        await store.send(.timerToggleButtonTapped) { $0.isTimerRunning = true }
         await clock.advance(by: .seconds(1))
-        await store.receive(\.timerTick) {
-            $0.count = 1
-        }
-        await store.send(.timerToggleButtonTapped) {
-            $0.isTimerRunning = false
-        }
+        await store.receive(\.timerTick) { $0.count = 1 }
+        await store.send(.timerToggleButtonTapped) { $0.isTimerRunning = false }
     }
     
     @Test func numberFact() async throws {
         let store = TestStore(
             initialState: CounterFeature.State(),
-            reducer: { CounterFeature() }
+            reducer: { CounterFeature() },
+            withDependencies: { $0.numberFact = .testValue }
         )
         
         await store.send(.factButtonTapped) { $0.isLoading = true }
-        await store.receive(\.factResponse, timeout: .seconds(1)) {
-              $0.isLoading = false
-              $0.fact = "???"
-            }
+        await store.receive(\.factResponse, timeout: 1) {
+            $0.isLoading = false
+            $0.fact = "0"
+        }
     }
 }

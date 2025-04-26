@@ -14,6 +14,7 @@ struct TCAExApp: App {
     static let store = Store(
         initialState: CounterFeature.State(),
         reducer: { CounterFeature()._printChanges() },
+        withDependencies: { $0.numberFact = .liveValue }
     )
     
     var body: some Scene {
