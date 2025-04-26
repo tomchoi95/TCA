@@ -8,26 +8,57 @@
 import Foundation
 import ComposableArchitecture
 
+// 구조체로 의존성을 정의 할 것임. 프로토콜로 하지 않을거다.
+// 그리고 이는 fetch를 가지고 있고, 그것은 클로져 혹은 함수를 갖는다.
+// 이거 마치 프로토콜같다. 프로토콜의 기능을 한다.
+// 그런데 장점이 뭘까?
+/*
+ 프로토콜 대신 구조체를 사용하는 것의 주요 장점들을 설명해드리겠습니다:
+ 간단성과 직관성
+ 프로토콜은 구현해야 할 메서드들을 정의하고, 이를 채택하는 타입들이 각각 구현해야 하는 복잡한 구조를 가집니다.
+ 구조체는 단순히 함수를 프로퍼티로 가지는 형태로, 더 직관적이고 이해하기 쉽습니다.
+ 유연성
+ 구조체를 사용하면 런타임에 함수를 쉽게 교체할 수 있습니다.
+ 프로토콜은 컴파일 타임에 고정된 구현을 요구하지만, 구조체는 동적으로 함수를 주입할 수 있습니다.
+ 테스트 용이성
+ 테스트 시에 실제 네트워크 호출 대신 목(mock) 함수를 쉽게 주입할 수 있습니다.
+ 프로토콜을 사용할 경우, 매번 새로운 타입을 만들어서 프로토콜을 채택해야 하지만, 구조체는 단순히 함수만 교체하면 됩니다.
+ 의존성 주입의 단순화
+ 구조체를 사용하면 의존성 주입이 더 단순해집니다.
+ 프로토콜을 사용할 경우, 의존성 주입을 위한 추가적인 보일러플레이트 코드가 필요할 수 있습니다.
+ 성능
+ 프로토콜은 동적 디스패치를 사용하지만, 구조체는 정적 디스패치를 사용할 수 있어 더 나은 성능을 보일 수 있습니다.
+ 예를 들어, 테스트 코드에서는 이렇게 간단하게 목(mock) 함수를 주입할 수 있습니다:
+ */
+
 struct NumberFactClient {
-    var fecth: (Int) async throws -> String
+    var fetch: (Int) async throws -> String
 }
 
+// 의존성 래퍼로 사용할 키값 만들기.
 extension NumberFactClient: DependencyKey {
-    static let liveValue: Self = .init(
-        fecth: { number in
-            let url = URL(string: "https://numbersapi.com/\(number)")!
-            let (data, _) = try await URLSession.shared.data(from: url)
+    // 실 사용시 구현될 로직. 위에서 만든 프로토콜? 같은 구조체 구현을 여기서 직접 하게 됨.
+    static let liveValue: NumberFactClient = .init(
+        fetch: { number in
+            let request = URLRequest(url: URL(string: "http://numbersapi.com/\(number)")!)
+            let (data, _) = try await URLSession.shared.data(for: request)
             return String(decoding: data, as: UTF8.self)
         }
     )
+    
+    static let testValue: NumberFactClient = .init(
+        fetch: { $0.description }
+    )
 }
 
+// Dependency에 벨류를 추가하기.
 extension DependencyValues {
     var numberFact: NumberFactClient {
         get { self[NumberFactClient.self] }
         set { self[NumberFactClient.self] = newValue }
     }
 }
+
 
 /**
  Section 4
