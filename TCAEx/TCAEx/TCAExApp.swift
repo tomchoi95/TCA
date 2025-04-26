@@ -12,14 +12,14 @@ import ComposableArchitecture
 struct TCAExApp: App {
     
     static let store = Store(
-        initialState: CounterFeature.State(),
-        reducer: { CounterFeature()._printChanges() },
+        initialState: AppFeature.State(),
+        reducer: { AppFeature()._printChanges() },
         withDependencies: { $0.numberFact = .liveValue }
     )
     
     var body: some Scene {
         WindowGroup {
-            CounterView(store: TCAExApp.store)
+            AppView(store: TCAExApp.store)
         }
     }
 }
