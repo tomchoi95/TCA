@@ -1,6 +1,6 @@
 //
-//  TCAExTests.swift
-//  TCAExTests
+//  CounterFeatureTests.swift
+//  CounterFeatureTests
 //
 //  Created by 최범수 on 2025-04-25.
 //
@@ -11,7 +11,7 @@ import ComposableArchitecture
 @testable import TCAEx
 
 @MainActor
-struct TCAExTests {
+struct CounterFeatureTests {
 
     @Test func basics() async throws {
         let store = await TestStore(

@@ -75,6 +75,7 @@
 			children = (
 				B3E420C52DA68379000BB133 /* TCAEx */,
 				B383A8602DBBB59100132509 /* TCAExTests */,
+				B3FBA5832DBC76B100A19DE5 /* Frameworks */,
 				B3E420C42DA68379000BB133 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -86,6 +87,13 @@
 				B383A85F2DBBB59100132509 /* TCAExTests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		B3FBA5832DBC76B100A19DE5 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
