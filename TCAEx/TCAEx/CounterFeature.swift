@@ -50,12 +50,15 @@ struct CounterFeature {
     enum CancelId { case timmer }
     
     @Dependency(\.continuousClock) var clock
+    @Dependency(\.numberFact) var numberFact
+    
     /**
      Step 5
      And finally, to finish conforming to Reducer, you must implement a body property with a Reduce reducer that evolves the state from its current value to the next value given a user action, and returns any effects that the feature wants to execute in the outside world. This almost always begins by switching on the incoming action to determine what logic you need to perform, and the state is provided as inout so you can perform mutations on it directly.
      Note
      A reducer is implemented by providing a body property, and then listing the reducers inside that you want to compose. Right now we only have one reducer we want to run, and so a simple Reduce is sufficient, but it is more typical to compose many reducers together, and that will be shown later in the tutorial.
      */
+    
     var body: some ReducerOf<Self> {
         Reduce { state, action in
             switch action {
@@ -75,9 +78,7 @@ struct CounterFeature {
                     state.isLoading = true
                     state.fact = nil
                     return .run { [count = state.count] send in
-                        let url = URL(string: "http://numbersapi.com/\(count)")!
-                        let (data, _) = try await URLSession.shared.data(from: url)
-                        let fact = String(decoding: data, as: UTF8.self)
+                        let fact = try await numberFact.fetch(count)
                         await send(.factResponse(fact))
                     }
                     
