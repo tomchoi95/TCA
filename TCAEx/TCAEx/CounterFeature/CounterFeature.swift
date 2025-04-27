@@ -99,7 +99,6 @@ struct CounterFeature {
                         
                     } else {
                         return .cancel(id: CancelId.timmer)
-
                     }
                     
                 case .timerTick:

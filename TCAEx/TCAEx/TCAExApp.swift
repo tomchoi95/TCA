@@ -19,7 +19,19 @@ struct TCAExApp: App {
     
     var body: some Scene {
         WindowGroup {
-            AppView(store: TCAExApp.store)
+            NavigationStack {
+                ContactsView(
+                    store: Store(
+                        initialState: ContactsFeature.State(
+                            contacts: [
+                                Contact(id: UUID(), name: "Blob"),
+                                Contact(id: UUID(), name: "Blob Jr"),
+                                Contact(id: UUID(), name: "Blob Sr"),
+                            ]),
+                        reducer: { ContactsFeature()._printChanges() }
+                    )
+                )
+            }
         }
     }
 }
