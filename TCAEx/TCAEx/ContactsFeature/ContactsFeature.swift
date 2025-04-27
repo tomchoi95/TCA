@@ -35,13 +35,9 @@ struct ContactsFeature {
                     state.addContact = AddContactFeature.State(contact: Contact(id: UUID(), name: ""))
                     return .none
                     
-                case .addContact(.presented(.delegate(.cancel))):
-                    state.addContact = nil
-                    return .none
                     
                 case .addContact(.presented(.delegate(.save(let contect)))):
                     state.contacts.append(contect)
-                    state.addContact = nil
                     return .none
                     
                 case .addContact:

@@ -20,7 +20,6 @@ struct AddContactFeature {
         case textFieldChanged(String)
         case delegate(Delegate)
         enum Delegate {
-            case cancel
             case save(Contact)
         }
     }
