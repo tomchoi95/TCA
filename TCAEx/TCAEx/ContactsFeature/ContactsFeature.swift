@@ -19,17 +19,24 @@ struct ContactsFeature {
     struct State: Equatable {
         // 아래의 addContact의 상태가 주입되면 preesent될 것임.
         @Presents var addContact: AddContactFeature.State?
+        @Presents var alert: AlertState<Action.Alert>?
         var contacts: IdentifiedArrayOf<Contact> = []
     }
     
     enum Action {
         case addButtonTapped
         case addContact(PresentationAction<AddContactFeature.Action>)
+        case alert(PresentationAction<Alert>)
         case deleteButtonTapped(id: Contact.ID)
+        enum Alert: Equatable {
+            case confirmation(id: Contact.ID)
+        }
     }
     
     var body: some ReducerOf<Self> {
-        Reduce { state, action in
+        Reduce {
+            state,
+            action in
             switch action {
                 case .addButtonTapped:
                     // 이제 액션을 추가할 것인데, 이 액션은 위의 add Contact 상태의 옵셔널을 해제하기 만듦
@@ -46,7 +53,19 @@ struct ContactsFeature {
                     return .none
                     
                 case .deleteButtonTapped(id: let id):
+                    state.alert = AlertState(
+                        title: { TextState("Are you sure?") },
+                        actions: {
+                            ButtonState(
+                                role: .destructive,
+                                action: .confirmation(id: id),
+                                label: { TextState("Delete") }
+                            )
+                        }
+                    )
                     return .none
+                    
+                    
             }
         }
         // ifLet 이거 냄새가 옵셔널 까는데 쓰는냄새가 남. 즉, 위에서 프레젠테이션 상태가 옵셔널임. 이게 옵셔널이 해제될 때 작동할것임.
