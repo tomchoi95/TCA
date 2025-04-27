@@ -25,6 +25,7 @@ struct ContactsFeature {
     enum Action {
         case addButtonTapped
         case addContact(PresentationAction<AddContactFeature.Action>)
+        case deleteButtonTapped(id: Contact.ID)
     }
     
     var body: some ReducerOf<Self> {
@@ -42,6 +43,9 @@ struct ContactsFeature {
                     
                 case .addContact:
                     // TODO: handle event
+                    return .none
+                    
+                case .deleteButtonTapped(id: let id):
                     return .none
             }
         }
