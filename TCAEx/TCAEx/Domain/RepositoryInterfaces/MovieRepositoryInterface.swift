@@ -10,7 +10,7 @@ import Foundation
 /// 영화 데이터 접근을 위한 Repository 인터페이스
 /// - Domain Layer는 이 인터페이스에만 의존하며, 구현체는 알지 못함
 /// - 클린 아키텍처의 의존성 역전 원칙(DIP) 적용
-protocol MovieRepositoryInterface {
+protocol MovieRepositoryInterface: Sendable {
     /// 영화 검색
     /// - Parameter query: 검색어
     /// - Returns: 검색된 영화 목록

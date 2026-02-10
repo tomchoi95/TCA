@@ -9,7 +9,7 @@ import Foundation
 
 /// TMDB API 데이터 소스
 /// - 실제 API 호출 또는 Mock 데이터 제공
-protocol TMDBDataSourceProtocol {
+protocol TMDBDataSourceProtocol: Sendable {
     func searchMovies(query: String) async throws -> [MovieDTO]
 }
 

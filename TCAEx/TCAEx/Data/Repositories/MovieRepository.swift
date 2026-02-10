@@ -9,7 +9,7 @@ import Foundation
 
 /// MovieRepositoryInterface의 구현체
 /// - DataSource를 사용하여 데이터를 가져오고 Domain Entity로 변환
-struct MovieRepository: MovieRepositoryInterface {
+struct MovieRepository: MovieRepositoryInterface, Sendable {
     private let dataSource: TMDBDataSourceProtocol
     
     init(dataSource: TMDBDataSourceProtocol) {

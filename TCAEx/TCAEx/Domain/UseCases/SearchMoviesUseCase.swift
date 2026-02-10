@@ -11,7 +11,7 @@ import Foundation
 /// - 검색어 유효성 검증
 /// - Repository를 통한 데이터 조회
 /// - 비즈니스 규칙 적용
-struct SearchMoviesUseCase {
+struct SearchMoviesUseCase: Sendable {
     private let repository: MovieRepositoryInterface
     
     init(repository: MovieRepositoryInterface) {
