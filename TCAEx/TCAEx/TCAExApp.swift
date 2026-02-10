@@ -12,7 +12,11 @@ import SwiftUI
 struct TCAExApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            SearchView(
+                store: Store(initialState: SearchFeature.State()) {
+                    SearchFeature()
+                }
+            )
         }
     }
 }
